@@ -1,0 +1,10 @@
+[Unit]
+Description=Hello app (web + redis)
+
+[Kube]
+# Full path to the YAML you already have
+Yaml=/home/maxo/Desktop/podman/hello-generated.yaml
+
+[Install]
+# Start it when your user session starts (or at boot, with linger enabled)
+WantedBy=default.target

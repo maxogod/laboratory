@@ -1,0 +1,26 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-5.7.0
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    io.kubernetes.cri-o.SandboxID/cache: f81b768d9cb1e9d7accabb1eedc14f71be47942c39d6a38cebe65100b74fb37c
+    io.kubernetes.cri-o.SandboxID/web: f81b768d9cb1e9d7accabb1eedc14f71be47942c39d6a38cebe65100b74fb37c
+  creationTimestamp: "2026-11-20T03:03:03Z"
+  labels:
+    app: hello
+  name: hello
+spec:
+  containers:
+  - args:
+    - redis-server
+    image: docker.io/library/redis:alpine
+    name: cache
+    ports:
+    - containerPort: 8000
+      hostPort: 8080
+  - image: localhost/hello-app:latest
+    name: web
+

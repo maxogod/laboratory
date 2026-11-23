@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+spec:
+  containers:
+    - name: web
+      image: hello-app            # matches the folder name -> Podman builds it
+      ports:
+        - containerPort: 8000
+          hostPort: 8080          # like "8080:8000" in compose
+    - name: cache
+      image: docker.io/library/redis:alpine
