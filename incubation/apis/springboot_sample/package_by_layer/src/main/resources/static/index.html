@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Word!</title>
+    <style>
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            padding: 5px;
+            font-size: small;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess The Word!</h1>
+
+    <form id="guessForm">
+        <label for="inputText">Enter your guess:</label>
+        <input type="text" id="inputText" name="inputText" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="result"></p>
+
+    <footer>
+        <p>answer is definitely not "pokemon!"</p>
+    </footer>
+</body>
+<script src="main.js"></script>
+</html>

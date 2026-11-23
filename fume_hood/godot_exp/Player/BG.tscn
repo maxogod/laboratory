@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0m2gxhdkw6l6"]
+
+[ext_resource type="Script" path="res://Player/BG.gd" id="1_k088d"]
+[ext_resource type="Texture2D" uid="uid://bmdiy3uck4pbm" path="res://Sunny-land-files/Sunny-land-assets-files/PNG/environment/layers/back.png" id="1_mua5l"]
+[ext_resource type="Texture2D" uid="uid://ca54x6ysea620" path="res://Sunny-land-files/Sunny-land-assets-files/PNG/environment/layers/middle.png" id="2_r7nbu"]
+
+[node name="BG" type="ParallaxBackground"]
+script = ExtResource("1_k088d")
+metadata/_edit_horizontal_guides_ = []
+metadata/_edit_vertical_guides_ = []
+
+[node name="Sky" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2(1530, 0)
+
+[node name="Back" type="Sprite2D" parent="Sky"]
+position = Vector2(527.5, 287)
+scale = Vector2(4, 3.483)
+texture = ExtResource("1_mua5l")
+
+[node name="Mountains" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.7, 0.7)
+motion_mirroring = Vector2(1404, 0)
+
+[node name="Middle" type="Sprite2D" parent="Mountains"]
+position = Vector2(-65, 576)
+scale = Vector2(2, 2)
+texture = ExtResource("2_r7nbu")
+
+[node name="Middle2" type="Sprite2D" parent="Mountains"]
+position = Vector2(286, 576)
+scale = Vector2(2, 2)
+texture = ExtResource("2_r7nbu")
+
+[node name="Middle3" type="Sprite2D" parent="Mountains"]
+position = Vector2(636, 576)
+scale = Vector2(2, 2)
+texture = ExtResource("2_r7nbu")
+
+[node name="Middle4" type="Sprite2D" parent="Mountains"]
+position = Vector2(987, 576)
+scale = Vector2(2, 2)
+texture = ExtResource("2_r7nbu")

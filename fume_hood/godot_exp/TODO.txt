@@ -1,0 +1,4 @@
+Take damage animation
+Hearts
+Cherries
+Dash

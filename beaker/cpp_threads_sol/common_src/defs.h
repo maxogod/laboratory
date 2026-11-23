@@ -1,0 +1,6 @@
+#ifndef TALLER_DEFS_H
+#define TALLER_DEFS_H
+
+#define PLAYER_ATTACK_CODE 0x03
+
+#endif  // TALLER_DEFS_H

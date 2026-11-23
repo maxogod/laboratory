@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "server",
+    "concurrency",
+    "communications",
+]
+resolver = "2"
