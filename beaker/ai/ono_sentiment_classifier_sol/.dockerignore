@@ -1,0 +1,10 @@
+.git
+data
+models
+external/ono/.git
+external/ono/target
+external/ono/benchmarks
+external/ono/presentation
+external/ono/assets
+**/__pycache__
+**/.venv

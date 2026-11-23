@@ -1,0 +1,3 @@
+[submodule "external/ono"]
+	path = external/ono
+	url = git@github.com:lminervino18/oxidized-neural-orchestra.git

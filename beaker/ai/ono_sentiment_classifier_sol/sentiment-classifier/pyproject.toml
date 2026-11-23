@@ -1,0 +1,29 @@
+[project]
+name = "sentiment-classifier"
+version = "0.1.0"
+description = "Three-class sentiment classifier trained with Oxidized Neural Orchestra"
+readme = "README.md"
+authors = [
+    { name = "maxogod", email = "105026197+maxogod@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+# `orchestra` (the ONO bindings) is NOT listed here: it is built from
+# external/ono/orchestra-py with maturin (done in docker/orchestrator.Dockerfile).
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scikit-learn>=1.5",
+    "scipy>=1.13",
+    "joblib>=1.4",
+    "safetensors>=0.4",
+]
+
+[project.scripts]
+sentiment-classifier = "sentiment_classifier:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["pytest>=8"]
