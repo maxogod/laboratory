@@ -1,0 +1,6 @@
+[submodule "unit_1_agent"]
+	path = unit_1_agent
+	url = git@hf.co:spaces/maxogod/First_agent_template
+[submodule "final"]
+	path = final
+	url = git@hf.co:spaces/maxogod/Final_Assignment_Template
