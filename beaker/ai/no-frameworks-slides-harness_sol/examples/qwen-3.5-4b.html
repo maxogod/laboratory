@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Nether Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8B0000, #4A0000);
+            overflow: hidden;
+        }
+        
+        section {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 60px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #FFFFAA;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #FFAA00;
+        }
+        
+        ul {
+            list-style: none;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            padding-left: 0;
+        }
+        
+        li {
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: rgba(139, 0, 0, 0.3);
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        
+        li:hover {
+            transform: translateX(5px);
+            background: rgba(255, 170, 0, 0.2);
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            background: #8B0000;
+            color: white;
+            border: 2px solid #FFAA00;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .control-btn:hover {
+            background: #FFAA00;
+            color: #8B0000;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 1.1rem;
+            color: #FFAA00;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        
+        .key-hint {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            color: #FFAA00;
+        }
+        
+        .highlight {
+            color: #FFFFAA !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<section class="slide">
+    <h1>The Nether Portal</h1>
+    <ul>
+        <li><span class="highlight">Requirements:</span> 8 Cobblestone + 4 Glowstone in a T shape</li>
+        <li><span class="highlight">Location:</span> Anywhere on Bedrock or Lava blocks</li>
+        <li><span class="highlight">Effect:</span> Creates teleportation portal with purple light</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Crafting the Portal</h1>
+    <ul>
+        <li><span class="highlight">Recipe:</span> 3 rows of blocks, central row has Glowstone surrounded by Cobblestone</li>
+        <li><span class="highlight">Placement:</span> Set blocks in air (not on top of other blocks)</li>
+        <li><span class="highlight">Lighting:</span> Use torches to illuminate your crafting area!</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Finding Strongholds</h1>
+    <ul>
+        <li><span class="highlight">Spawn Chance:</span> Approximately 1 in every 5-6 worlds</li>
+        <li><span class="highlight">Navigation:</span> Follow beds to Nether, then use Dragon's Breath or Wither Skulls</li>
+        <li><span class="highlight">Tips:</span> Stay at bottom of world (bedrock level) when navigating</li>
+    </ul>
+</section>
+
+<div class="controls">
+    <button class="control-btn" onclick="prevSlide()">← Previous</button>
+    <button class="control-btn" onclick="nextSlide()">Next →</button>
+</div>
+
+<div class="slide-counter">Slide <span id="current">1</span> of 3</div>
+<div class="key-hint">Use ← / → or Space to navigate</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('section');
+    const counter = document.getElementById('current');
+    
+    function showSlide(n) {
+        slides.forEach((slide, i) => {
+            if (i === n) {
+                slide.style.display = 'flex';
+                slide.classList.add('active');
+            } else {
+                slide.style.display = 'none';
+                slide.classList.remove('active');
+            }
+        });
+        counter.textContent = n + 1;
+    }
+    
+    function nextSlide() {
+        if (currentSlide < slides.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+    
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+    }
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+        }
+    });
+</script>
+
+</body>
+</html>

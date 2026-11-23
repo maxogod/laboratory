@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Value of Offline Games</title>
+<style>
+  :root {
+    --bg: #f7f9fb;
+    --surface: #ffffff;
+    --surface-alt: #e8eef2;
+    --accent: #0f766e;
+    --accent-dim: #14b8a6;
+    --text: #1f2933;
+    --text-dim: #54616d;
+    --danger: #c62828;
+    --warning: #b7791f;
+    --ok: #2f855a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    position: relative;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  /* Slides */
+  section.slide {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    background: var(--bg);
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  section.slide.active {
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Slide counter */
+  #counter {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-size: 13px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  /* Progress bar */
+  #progress {
+    position: fixed;
+    top: 0; left: 0; height: 4px;
+    background: var(--surface);
+    width: 100%;
+    z-index: 99;
+  }
+  #progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  /* Typography */
+  h1, h2, h3 { margin: 0 0 24px 0; line-height: 1.2; }
+  h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -1px; }
+  h2 { font-size: 2.2rem; font-weight: 700; }
+  h3 { font-size: 1.4rem; font-weight: 600; color: var(--accent); }
+
+  p { margin: 0 0 16px 0; max-width: 760px; text-align: center; }
+  .lead { font-size: 1.25rem; color: var(--text-dim); }
+
+  ul { margin: 0 0 24px 0; padding-left: 24px; text-align: left; max-width: 760px; }
+  li { margin: 0 0 12px 0; }
+
+  strong { color: var(--accent); }
+
+  /* Decorative accents */
+  .kicker {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 700;
+    display: block;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--accent-dim);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .card-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(15, 118, 110, 0.25);
+    border-radius: 12px;
+    padding: 20px 24px;
+    width: 300px;
+    max-width: 90%;
+    text-align: left;
+  }
+  .card h4 { margin: 0 0 8px 0; font-size: 1.1rem; color: var(--accent); }
+  .card p { margin: 0; font-size: 0.95rem; color: var(--text-dim); text-align: left; }
+
+  .stat {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 0.9rem; color: var(--text-dim); margin-top: 4px; }
+
+  .two-col {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    max-width: 1000px;
+    align-items: flex-start;
+  }
+  .col { flex: 1; }
+
+  .footer {
+    position: fixed;
+    bottom: 12px;
+    left: 32px;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .center { text-align: center; }
+  .nowrap { white-space: nowrap; }
+
+  /* Reveal hint */
+  .hint {
+    position: fixed;
+    bottom: 60px;
+    right: 32px;
+    font-size: 12px;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 640px) {
+    section.slide { padding: 40px 20px; }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.6rem; }
+    .two-col { flex-direction: column; }
+    .card { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"><div id="progress-fill"></div></div>
+<div id="counter">1 / 14</div>
+<div class="hint">Arrow keys / Space • ESC for overview</div>
+
+<!-- 1. Title -->
+<section class="slide active" id="s1">
+  <div class="center">
+    <span class="kicker">A presentation on playability, ownership, and preservation</span>
+    <h1>The Value of<br>Offline Games</h1>
+    <p class="lead" style="max-width: 620px;">Why single-player games that still work without an internet connection matter more than ever — in an era where even solo games demand a network check just to start.</p>
+    <div style="margin-top: 40px;">
+      <span class="tag">Single-Player</span>
+      <span class="tag">DRM-Free</span>
+      <span class="tag">Game Preservation</span>
+      <span class="tag">Digital Rights</span>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 2. The Problem -->
+<section class="slide" id="s2">
+  <div>
+    <span class="kicker">The current landscape</span>
+    <h2>Single-player games that need the internet</h2>
+    <p class="lead">Many modern single-player titles require an online connection at launch — not for multiplayer, but for license key checking, DRM validation, or account authentication.</p>
+    <ul>
+      <li><strong>Always-online DRM:</strong> The game phones home to verify your purchase before letting you play.</li>
+      <li><strong>Launcher dependency:</strong> You must log into a store/client before the game will start.</li>
+      <li><strong>Day-one patches:</strong> Some discs or downloads are incomplete without an internet update.</li>
+      <li><strong>Single-player modes gated online:</strong> Campaigns that disconnect you if your network drops.</li>
+    </ul>
+    <p style="margin-top:28px;"><strong>Bottom line:</strong> You bought a solo experience, but it still needs permission from a server to run.</p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 3. What Offline Means -->
+<section class="slide" id="s3">
+  <div>
+    <span class="kicker">Definition</span>
+    <h2>What makes a game "offline"?</h2>
+    <ul>
+      <li><strong>No login required.</strong> Install and play without an account.</li>
+      <li><strong>No launch-time key check.</strong> The game doesn't phone home before the title screen.</li>
+      <li><strong>No disconnect penalties.</strong> Losing Wi-Fi mid-session doesn't kick you out.</li>
+      <li><strong>Fully playable years later.</strong> Even if the original store or publisher shuts down.</li>
+    </ul>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Offline</h4>
+        <p>Works on a plane, in a cabin, during an outage, or a decade after release.</p>
+      </div>
+      <div class="card">
+        <h4>Online-required</h4>
+        <p>Stops working when servers go down, your internet drops, or your account is banned.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 4. Preservation -->
+<section class="slide" id="s4">
+  <div>
+    <span class="kicker">Game history is fragile</span>
+    <h2>Offline games are preservable</h2>
+    <p class="lead">When a game's only copy depends on an external authentication server, its lifespan is tied to that server's uptime — not to the game itself.</p>
+    <div class="two-col">
+      <div class="col">
+        <ul>
+          <li><strong>Server sunsets:</strong> Publishers retire authentication servers; online-required solo games become unlaunchable.</li>
+          <li><strong>Store closures:</strong> Digital storefronts and launchers disappear, taking your "library" with them.</li>
+          <li><strong>No archival:</strong> Libraries and museums cannot preserve a game that won't run without a live license check.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="card">
+          <h4>Offline = immortal</h4>
+          <p>A DRM-free installer or cartridge can be backed up, emulated, and played indefinitely — independent of any company's server.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 5. Access & Equity -->
+<section class="slide" id="s5">
+  <div>
+    <span class="kicker">Who gets to play?</span>
+    <h2>Internet is not universal</h2>
+    <ul>
+      <li><strong>Rural and remote areas</strong> often lack reliable broadband.</li>
+      <li><strong>Data caps and metered connections</strong> make large daily checks impractical.</li>
+      <li><strong>Travelers, military personnel, and students</strong> may not have consistent access.</li>
+      <li><strong>Developing regions</strong> face cost and infrastructure barriers.</li>
+    </ul>
+    <div class="card-grid">
+      <div class="card">
+        <div class="stat">Offline</div>
+        <div class="stat-label">Works anywhere, anytime</div>
+      </div>
+      <div class="card">
+        <div class="stat" style="color:var(--danger)">Online-only</div>
+        <div class="stat-label">Excludes the disconnected</div>
+      </div>
+    </div>
+    <p style="margin-top:24px;"><strong>Offline games democratize play.</strong> They don't assume you live in a connected world.</p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 6. Ownership -->
+<section class="slide" id="s6">
+  <div>
+    <span class="kicker">You bought it. Or did you?</span>
+    <h2>Ownership vs. license</h2>
+    <p class="lead">An online key check transforms a purchase into a conditional lease. You don't own the game — you hold permission that can be revoked.</p>
+    <ul>
+      <li><strong>Account bans</strong> can lock you out of single-player games you paid for.</li>
+      <li><strong>Payment disputes</strong> or region changes can suspend your library.</li>
+      <li><strong>Terms of service</strong> changes can alter how — or whether — your game runs.</li>
+      <li><strong>Offline installers</strong> mean actual possession: the game is yours, on your terms.</li>
+    </ul>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 7. Developer freedom -->
+<section class="slide" id="s7">
+  <div>
+    <span class="kicker">For creators</span>
+    <h2>Design without servers</h2>
+    <ul>
+      <li><strong>Focus on the game, not the netcode.</strong> Resources go into story, mechanics, and polish — not authentication APIs.</li>
+      <li><strong>No launch-day server meltdowns.</strong> Players can start playing the moment they install.</li>
+      <li><strong>Lower long-term costs.</strong> No authentication infrastructure to maintain for years after release.</li>
+      <li><strong>Trust the player.</strong> DRM-free releases build goodwill and reduce friction between creator and audience.</li>
+    </ul>
+    <p style="margin-top:24px;"><strong>Great single-player design doesn't need a handshake with a remote server.</strong></p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 8. Player experience -->
+<section class="slide" id="s8">
+  <div>
+    <span class="kicker">Immersion, uninterrupted</span>
+    <h2>Solo play should be solitary</h2>
+    <ul>
+      <li><strong>No connection pop-ups</strong> breaking narrative immersion.</li>
+      <li><strong>No ping spikes</strong> stuttering a cutscene or boss fight.</li>
+      <li><strong>No forced updates</strong> blocking you right when you want to play.</li>
+      <li><strong>Quiet, personal, on-demand.</strong> The game waits for you, not the other way around.</li>
+    </ul>
+    <div class="center" style="margin-top:32px;">
+      <p class="lead" style="font-style:italic;">"The best single-player games feel like a conversation between the player and the world — not between the player and a server."</p>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 9. Case studies -->
+<section class="slide" id="s9">
+  <div>
+    <span class="kicker">Real-world examples</span>
+    <h2>When online requirements fail</h2>
+    <div class="two-col">
+      <div class="col">
+        <div class="card" style="border-color: var(--danger);">
+          <h4 style="color: var(--danger)">SimCity (2013)</h4>
+          <p>Required a constant connection for its single-player city simulation. Launch-day server failures left paying customers unable to play at all.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="border-color: var(--ok);">
+          <h4 style="color: var(--ok)">Elden Ring / Witcher 3 (offline)</h4>
+          <p>Massive, critically acclaimed single-player experiences fully playable without an internet connection — proving AAA scale and offline play coexist.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:28px;">
+      <div class="card-grid">
+        <div class="card">
+          <h4 style="color:var(--warning)">Diablo III at launch</h4>
+          <p>Online requirement caused Error 37 login queues for players who only wanted to play solo.</p>
+        </div>
+        <div class="card">
+          <h4>GOG classics</h4>
+          <p>DRM-free installers mean games from decades ago still install and run today.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 10. The offline movement -->
+<section class="slide" id="s10">
+  <div>
+    <span class="kicker">Alternatives exist</span>
+    <h2>The DRM-free and offline movement</h2>
+    <ul>
+      <li><strong>GOG.com:</strong> Built on the principle that games you buy should be yours, DRM-free and offline.</li>
+      <li><strong>itch.io:</strong> Many indie developers sell direct, offline installers with no launcher required.</li>
+      <li><strong>Humble Bundle:</strong> Often provides DRM-free downloads alongside Steam keys.</li>
+      <li><strong>Physical media:</strong> Cartridges and discs that work without day-one patches or online checks.</li>
+    </ul>
+    <p style="margin-top:24px;"><strong>Supporting offline releases is a vote for games that outlive their publishers.</strong></p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 11. What players can do -->
+<section class="slide" id="s11">
+  <div>
+    <span class="kicker">Take action</span>
+    <h2>What you can do</h2>
+    <ul>
+      <li><strong>Check before you buy.</strong> Look for "offline," "DRM-free," or "single-player" labels on store pages.</li>
+      <li><strong>Back up your installers.</strong> Keep local copies of games you own so they survive store closures.</li>
+      <li><strong>Support DRM-free storefronts.</strong> Your money signals that offline access matters.</li>
+      <li><strong>Speak up.</strong> Review-bombing isn't the answer — clear, honest feedback about always-online requirements is.</li>
+    </ul>
+    <div class="center" style="margin-top:32px;">
+      <p class="lead">Every purchase is a vote for the kind of games industry we want.</p>
+    </div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 12. Summary -->
+<section class="slide" id="s12">
+  <div>
+    <span class="kicker">Recap</span>
+    <h2>Why offline games matter</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Preservation</h4>
+        <p>Games survive long after authentication servers are switched off.</p>
+      </div>
+      <div class="card">
+        <h4>Access</h4>
+        <p>Playable regardless of location, connection, or income.</p>
+      </div>
+      <div class="card">
+        <h4>Ownership</h4>
+        <p>You possess the game — not a revocable license.</p>
+      </div>
+      <div class="card">
+        <h4>Immersion</h4>
+        <p>Solo play stays solo, without network interruptions.</p>
+      </div>
+    </div>
+    <p style="margin-top:28px;"><strong>Offline games aren't nostalgia. They're a necessity.</strong></p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 13. Closing -->
+<section class="slide" id="s13">
+  <div class="center">
+    <span class="kicker">The bottom line</span>
+    <h1>A single-player game<br>should not need<br>permission to start.</h1>
+    <p class="lead" style="margin-top:24px;">In an age of always-online key checks, offline games are the guarantee that play remains in your hands — not a server's.</p>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<!-- 14. Q&A -->
+<section class="slide" id="s14">
+  <div class="center">
+    <h2>Questions &amp; Discussion</h2>
+    <p class="lead">What offline games have meant the most to you — and when has an online requirement stopped you from playing?</p>
+    <div style="margin-top:40px; font-size: 1.1rem; color: var(--accent);">Thank you.</div>
+  </div>
+  <div class="footer">The Value of Offline Games</div>
+</section>
+
+<script>
+  const total = document.querySelectorAll('section.slide').length;
+  const slides = document.querySelectorAll('section.slide');
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progress-fill');
+
+  function updateUI() {
+    const active = document.querySelector('section.slide.active');
+    const index = Array.from(slides).indexOf(active) + 1;
+    counter.textContent = index + ' / ' + total;
+    progressFill.style.width = ((index - 1) / Math.max(total - 1, 1)) * 100 + '%';
+  }
+
+  function showSlide(index) {
+    if (index < 1) index = 1;
+    if (index > total) index = total;
+    slides.forEach(s => s.classList.remove('active'));
+    slides[index - 1].classList.add('active');
+    updateUI();
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    const active = document.querySelector('section.slide.active');
+    const index = Array.from(slides).indexOf(active) + 1;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      showSlide(index + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      showSlide(index - 1);
+    } else if (e.key === 'Home') {
+      showSlide(1);
+    } else if (e.key === 'End') {
+      showSlide(total);
+    }
+  });
+
+  // Touch / click navigation (optional: click advances)
+  document.addEventListener('click', (e) => {
+    // only advance on blank areas, not links/buttons
+    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+    const active = document.querySelector('section.slide.active');
+    const index = Array.from(slides).indexOf(active) + 1;
+    showSlide(index + 1);
+  });
+
+  updateUI();
+</script>
+
+</body>
+</html>
