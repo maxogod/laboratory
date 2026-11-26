@@ -1,0 +1,42 @@
+[project]
+name = "atlassian-mcp"
+version = "1.0.0"
+description = "MCP server with useful tools to optimize workflow and efficiency"
+readme = "README.md"
+authors = [
+    { name = "Maximo Damian Utrera", email = "maximo.d.utrera@gmail.com" }
+]
+requires-python = "==3.14.4"
+dependencies = [
+    "fastmcp==4.0.2",
+    "httpx==0.28.1",
+    "pydantic-settings==2.15.0",
+]
+
+[project.scripts]
+atlassian-mcp = "mcp_server:main"
+
+[build-system]
+requires = ["uv_build==0.12.9"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "mcp_server"
+
+[dependency-groups]
+dev = [
+    "mypy==2.3.1",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "ruff==0.16.4",
+]
+
+[tool.ruff.lint]
+ignore = ["N999", "BLE001"]
+
+[tool.mypy]
+explicit_package_bases = true
+mypy_path = "src"
+
+[tool.basedpyright]
+extraPaths = ["src"]
